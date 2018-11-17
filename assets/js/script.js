@@ -22,7 +22,7 @@ const mainTable = `<table class="table table-dark table hover" id="time-board">
 <th scope="col">Destination</th>
 <th scope="col">Time From Station</th>
 <th scope="col">Frequency</th>
-<th scope="col">Following Train</th>
+<th scope="col"> Train After Next</th>
 </tr>
 </thead>
 <tbody id="train-data">
@@ -114,16 +114,18 @@ $("#submit").on("submit", event => {
 //The following function will append rows to the table as used inputs values
 
 database.ref().on("child_added", snapshot => {
-  const operator = snapshot.val().operator;
-  const frequency = snapshot.val().frequency;
-  const destination = snapshot.val().destination;
-  const firstTrain = snapshot.val().firstTrain;
+  //points data to database
 
-  const humanReadableFirstTrainTime = moment(firstTrain, "HH:MM A");
-  const timeDifference = moment().diff(humanReadableFirstTrainTime, "minutes");
-  const tillNextTrain = timeDifference % frequency;
-  const timeBetweenTrains = frequency - tillNextTrain;
-  const tillNextReadable = moment()
+  let operator = snapshot.val().operator;
+  let frequency = snapshot.val().frequency;
+  let destination = snapshot.val().destination;
+  let firstTrain = snapshot.val().firstTrain;
+
+  let humanReadableFirstTrainTime = moment(firstTrain, "HH:MM A");
+  let timeDifference = moment().diff(humanReadableFirstTrainTime, "minutes");
+  let tillNextTrain = timeDifference % frequency;
+  let timeBetweenTrains = frequency - tillNextTrain;
+  let tillNextReadable = moment()
     .add(tillNextTrain, "minutes")
     .format("HH:MM A");
 
@@ -137,6 +139,7 @@ database.ref().on("child_added", snapshot => {
   <td><i class="fas fa-times"></i></td>
   </tr>
   `;
+
   $("#train-data").append(newRow);
 });
 
