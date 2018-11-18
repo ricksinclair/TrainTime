@@ -88,12 +88,17 @@ $("#formDiv").append(mainForm);
 //i took the suggestion from last graded assignment and used
 //on "submit" instead of on "click"
 
-$("#submit").on("submit", event => {
+$("#submit").on("click", event => {
   event.preventDefault();
-  const operator = $("#operator").val();
-  const frequency = $("#frequency").val();
-  const destination = $("#destination").val();
-  const firstTrain = $("#firstTrain").val();
+  let operator = $("#operator").val();
+  let frequency = $("#frequency").val();
+  let destination = $("#destination").val();
+  let firstTrain = $("#firstTrain").val();
+
+  console.log(operator);
+  console.log(frequency);
+  console.log(destination);
+  console.log(firstTrain);
 
   const enrolledTrain = {
     operator: operator,
@@ -101,6 +106,8 @@ $("#submit").on("submit", event => {
     destination: destination,
     firstTrain: firstTrain
   };
+
+  console.log(enrolledTrain);
 
   database.ref().push(enrolledTrain);
 
@@ -116,18 +123,18 @@ $("#submit").on("submit", event => {
 database.ref().on("child_added", snapshot => {
   //points data to database
 
-  let operator = snapshot.val().operator;
-  let frequency = snapshot.val().frequency;
-  let destination = snapshot.val().destination;
-  let firstTrain = snapshot.val().firstTrain;
+  const operator = snapshot.val().operator;
+  const frequency = snapshot.val().frequency;
+  const destination = snapshot.val().destination;
+  const firstTrain = snapshot.val().firstTrain;
 
-  let humanReadableFirstTrainTime = moment(firstTrain, "HH:MM A");
-  let timeDifference = moment().diff(humanReadableFirstTrainTime, "minutes");
-  let tillNextTrain = timeDifference % frequency;
-  let timeBetweenTrains = frequency - tillNextTrain;
-  let tillNextReadable = moment()
+  var humanReadableFirstTrainTime = moment(firstTrain, "HH:MM A");
+  var timeDifference = moment().diff(humanReadableFirstTrainTime, "minutes");
+  var tillNextTrain = timeDifference % frequency;
+  var timeBetweenTrains = frequency - tillNextTrain;
+  var tillNextReadable = moment()
     .add(tillNextTrain, "minutes")
-    .format("HH:MM A");
+    .format("H:HH A");
 
   const newRow = `
   <tr>
@@ -136,7 +143,7 @@ database.ref().on("child_added", snapshot => {
   <td>${timeBetweenTrains}</td>
   <td>${frequency}</td>
   <td>${tillNextReadable}</td>
-  <td><i class="fas fa-times"></i></td>
+  <td><span><i class="fas fa-times"></i></span></td>
   </tr>
   `;
 
